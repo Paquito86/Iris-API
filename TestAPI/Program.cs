@@ -9,7 +9,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDbContext<NodeDb>(options => options.UseInMemoryDatabase("items"));
 builder.Services.AddSwaggerGen(c => {
 
-    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo() { Title = "IRIS API", Version = "v1" });
+    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo() { Title = "IRIS by AlphaTech API", Version = "v1" });
 });
 
 var app = builder.Build();
@@ -42,7 +42,7 @@ app.MapGet("/weatherforecast", () =>
 })
 .WithName("GetWeatherForecast");
 
-app.MapGet("/", () => "¡Hello! -- IRIS API v1");
+app.MapGet("/", () => "¡Hello! -- IRIS by AlphaTech API v1");
 
 #region Node Endpoints
 
