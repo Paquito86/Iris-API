@@ -12,6 +12,7 @@
 
         public double Cost { get; set; } // Coste mensual en €
 
+        public bool Retired { get; set; } // Wether or not está jubilado
         public bool Pterodactyl { get; set; } // Wether or not el nodo está conectado a Pterodactyl
         public bool Monolith { get; set; } // Wether or not es un monolito
         public bool Docker { get; set; } // Wether or not usa Docker
