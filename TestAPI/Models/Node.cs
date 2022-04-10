@@ -12,6 +12,7 @@ namespace TestAPI.Models
         public string? RAM { get; set; } // Memoria RAM total del Nodo en MiB
 
         public double Cost { get; set; } // Coste mensual en €
+        public string? Provider { get; set; }
 
         public bool Retired { get; set; } // Wether or not está jubilado
         public bool Pterodactyl { get; set; } // Wether or not el nodo está conectado a Pterodactyl
