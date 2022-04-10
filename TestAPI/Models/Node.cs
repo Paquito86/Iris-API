@@ -1,4 +1,5 @@
-﻿namespace TestAPI.Models
+﻿using Microsoft.EntityFrameworkCore;
+namespace TestAPI.Models
 {
     public class Node
     {
@@ -17,5 +18,11 @@
         public bool Monolith { get; set; } // Wether or not es un monolito
         public bool Docker { get; set; } // Wether or not usa Docker
         public bool Kubernetes { get; set; } // Wether or not usa Kubernetes
+
+    }
+    class NodeDb : DbContext
+    {
+        public NodeDb(DbContextOptions options) : base(options) { }
+        public DbSet<Node> Nodes { get; set; }
     }
 }

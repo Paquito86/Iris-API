@@ -1,9 +1,16 @@
+using Microsoft.EntityFrameworkCore;
+using TestAPI.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c=>c.SwaggerDoc("v1", new() { Title = "IRIS API", Version = "v1" }));
+builder.Services.AddDbContext<NodeDb>(options => options.UseInMemoryDatabase("items"));
+builder.Services.AddSwaggerGen(c => {
+
+    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo() { Title = "IRIS API", Version = "v1" });
+});
 
 var app = builder.Build();
 
@@ -11,7 +18,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("swagger/v1/swagger.json", "IRIS API v1"));
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("v1/swagger.json", "IRIS API v1"));
 }
 
 app.UseHttpsRedirection();
@@ -35,10 +42,9 @@ app.MapGet("/weatherforecast", () =>
 })
 .WithName("GetWeatherForecast");
 
-app.MapGet("/nodes/list", () =>
-{
-    throw new NotImplementedException();
-});
+app.MapGet("/", () => "¡Hello! -- IRIS API v1");
+
+app.MapGet("/nodes", async (NodeDb db) => await db.Nodes.ToListAsync());
 
 app.Run();
 
