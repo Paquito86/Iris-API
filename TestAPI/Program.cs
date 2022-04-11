@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDbContext<NodeDb>(options => options.UseInMemoryDatabase("items"));
+builder.Services.AddDbContext<KeyDb>(options => options.UseInMemoryDatabase("items"));
 builder.Services.AddSwaggerGen(c => {
 
     c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo() { Title = "IRIS API by AlphaTech", Version = "v1" });
@@ -70,6 +71,45 @@ app.MapDelete("/node/{id}", async (NodeDb db, int id) =>
         return Results.NotFound();
     }
     db.Nodes.Remove(node);
+    await db.SaveChangesAsync();
+    return Results.Ok();
+});
+#endregion
+
+#region SSH_Keys Endpoints
+
+app.MapGet("/pubkey", async (KeyDb db) => await db.Keys.ToListAsync());
+
+app.MapPost("/pubkey", async (KeyDb db, SSHPubKey key) =>
+{
+    await db.Keys.AddAsync(key);
+    await db.SaveChangesAsync();
+    return Results.Created($"/nodes/{key.Id}", key);
+});
+
+app.MapGet("/pubkey/{id}", async (KeyDb db, int id) => await db.Keys.FindAsync(id));
+
+app.MapPut("/pubkey/{id}", async (KeyDb db, SSHPubKey updatekey, int id) =>
+{
+    var key = await db.Keys.FindAsync(id);
+    if (key is null) { return Results.NotFound(); }
+    key.Name = updatekey.Name;
+    key.Workstation = updatekey.Workstation;
+    key.Node_Id = updatekey.Node_Id;
+    key.RSA = updatekey.RSA;
+    
+    await db.SaveChangesAsync();
+    return Results.NoContent();
+});
+
+app.MapDelete("/pubkey/{id}", async (KeyDb db, int id) =>
+{
+    var node = await db.Keys.FindAsync(id);
+    if (node is null)
+    {
+        return Results.NotFound();
+    }
+    db.Keys.Remove(node);
     await db.SaveChangesAsync();
     return Results.Ok();
 });
