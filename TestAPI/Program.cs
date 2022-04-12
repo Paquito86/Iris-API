@@ -117,12 +117,4 @@ app.MapDelete("/pubkey/{id}", async (KeyDb db, int id) =>
 });
 #endregion
 
-/*app.MapPost("/pubkey/gen", async (KeyDb db, SSHPubKey key) =>
-{
-    await db.Keys.AddAsync(key);
-    await db.SaveChangesAsync();
-    return Results.Created($"/nodes/{key.Id}", key);
-    
-});*/
-
 app.Run();
