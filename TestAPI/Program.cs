@@ -2,12 +2,14 @@ using Microsoft.EntityFrameworkCore;
 using TestAPI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+var connectionStr2 = builder.Configuration.GetConnectionString("Nodes") ?? "Data Source=Nodes.db";
+var connectionStr1 = builder.Configuration.GetConnectionString("Keys") ?? "Data Source=Keys.db";
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddDbContext<NodeDb>(options => options.UseInMemoryDatabase("items"));
-builder.Services.AddDbContext<KeyDb>(options => options.UseInMemoryDatabase("items"));
+builder.Services.AddSqlite<NodeDb>(connectionStr1);
+builder.Services.AddSqlite<KeyDb>(connectionStr2);
 builder.Services.AddSwaggerGen(c => {
 
     c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo() { Title = "IRIS API by AlphaTech", Version = "v1" });
@@ -114,5 +116,13 @@ app.MapDelete("/pubkey/{id}", async (KeyDb db, int id) =>
     return Results.Ok();
 });
 #endregion
+
+/*app.MapPost("/pubkey/gen", async (KeyDb db, SSHPubKey key) =>
+{
+    await db.Keys.AddAsync(key);
+    await db.SaveChangesAsync();
+    return Results.Created($"/nodes/{key.Id}", key);
+    
+});*/
 
 app.Run();
