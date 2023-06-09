@@ -1,5 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
+using TestAPI.Agents;
 using TestAPI.Models;
+
+var Title = "Iris API";
+var Version = "v1";
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionStr2 = builder.Configuration.GetConnectionString("Nodes") ?? "Data Source=Nodes.db";
@@ -12,7 +18,7 @@ builder.Services.AddSqlite<NodeDb>(connectionStr1);
 builder.Services.AddSqlite<KeyDb>(connectionStr2);
 builder.Services.AddSwaggerGen(c => {
 
-    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo() { Title = "IRIS API by AlphaTech", Version = "v1" });
+    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo() { Title = Title, Version = Version });
 });
 
 var app = builder.Build();
@@ -26,7 +32,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/", () => "¡Hello! -- IRIS API v1 by AlphaTech");
+app.MapGet("/", () => $"¡Hello! | {Title} {Version} ");
 
 #region Node Endpoints
 
@@ -114,6 +120,13 @@ app.MapDelete("/pubkey/{id}", async (KeyDb db, int id) =>
     db.Keys.Remove(node);
     await db.SaveChangesAsync();
     return Results.Ok();
+});
+
+app.MapGet("/keygen", () =>
+{
+    SSHKeyAgent sshKeyAgent = new SSHKeyAgent();
+    string result = sshKeyAgent.SSHGen("workstation00");
+    return result;
 });
 #endregion
 

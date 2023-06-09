@@ -4,9 +4,9 @@ namespace TestAPI.Agents
 {
     public class SSHKeyAgent
     {
-        public string? PublicSshKeyWithComment;
+        //public string? PublicSshKeyWithComment;
 
-        public void SSHGen(string workstation, SSHPubKey key)
+        public string SSHGen(string workstation)
         {
 
             var keygen = new SshKeyGenerator.SshKeyGenerator(2048);
@@ -14,13 +14,10 @@ namespace TestAPI.Agents
             var privateKey = keygen.ToPrivateKey();
             Console.WriteLine(privateKey);
 
-            var publicSshKey = keygen.ToRfcPublicKey();
-            Console.WriteLine(publicSshKey);
-
             var publicSshKeyWithComment = keygen.ToRfcPublicKey(workstation);
             Console.WriteLine(publicSshKeyWithComment);
 
-            PublicSshKeyWithComment = publicSshKeyWithComment;
+            return publicSshKeyWithComment;
         }
     }
 }
