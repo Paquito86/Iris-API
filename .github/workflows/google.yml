@@ -18,9 +18,9 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
-  GAR_LOCATION: europe-west3
+  GAR_LOCATION: europe-west4
   GKE_CLUSTER: cluster-iris    
-  GKE_ZONE: europe-west3-a   
+  GKE_ZONE: europe-west4-a   
   DEPLOYMENT_NAME: iris 
   REPOSITORY: samples 
   IMAGE: docker pull ghcr.io/paquito86/iris-api:master
